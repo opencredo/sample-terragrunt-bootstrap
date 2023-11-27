@@ -1,10 +1,5 @@
 name: tfsec
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-
+on: [pull_request]
 permissions: read-all
 
 jobs:
@@ -22,7 +17,7 @@ jobs:
         with:
           soft_fail: true
           format: json
-          working_directory: ${{ inputs.working-directory }}
+          working_directory: .
           additional_args: --ignore-hcl-errors --out tfsec_results.json
 
       - name: Filter high and medium severity tfsec results
@@ -35,7 +30,6 @@ jobs:
         run: echo "tfsec-results=$(cat high_medium_tfsec_results_pretty.json)"
 
       - name: Check for high and medium severity findings
-        if: ${{ inputs.target-sec }}
         run: |
           if jq -e '.results[] | select(.severity == "HIGH" or .severity == "MEDIUM")' tfsec_results.json; then
             echo "High or medium severity findings found."
