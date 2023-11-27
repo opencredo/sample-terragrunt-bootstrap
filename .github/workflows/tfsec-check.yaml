@@ -1,0 +1,46 @@
+name: tfsec
+on: [pull_request]
+permissions: read-all
+
+jobs:
+  tfsec:
+    name: tfsec custom report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: tfsec
+        uses: aquasecurity/tfsec-action@v1.0.0
+        with:
+          soft_fail: true
+          format: json
+          working_directory: .
+          additional_args: --ignore-hcl-errors --out tfsec_results.json
+
+      - name: Filter high and medium severity tfsec results
+        run: |
+          jq '[.results[] | select(.severity == "HIGH" or .severity == "MEDIUM") | {rule_description, severity, resource, location}]' tfsec_results.json > high_medium_tfsec_results.json
+          jq '.' high_medium_tfsec_results.json > high_medium_tfsec_results_pretty.json
+
+      - name: Check tfsec Results
+        id: check_tfsec_results
+        run: echo "tfsec-results=$(cat high_medium_tfsec_results_pretty.json)"
+
+      - name: Check for high and medium severity findings
+        run: |
+          if jq -e '.results[] | select(.severity == "HIGH" or .severity == "MEDIUM")' tfsec_results.json; then
+            echo "High or medium severity findings found."
+            exit 1  # Failure, exit the workflow
+          else
+            echo "No high or medium severity findings found."
+            exit 0  # Success, continue with the workflow
+          fi
+      - uses: mshick/add-pr-comment@v2
+        if: failure()
+        with:
+          preformatted: true
+          message-path: |
+            high_medium_tfsec_results_pretty.json
