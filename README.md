@@ -3,7 +3,7 @@
 
 [![tfsec](https://github.com/opencredo/iac-patterns/actions/workflows/tfsec-check.yaml/badge.svg)](https://github.com/opencredo/iac-patterns/actions/workflows/tfsec-check.yaml) [![Pull Request](https://github.com/opencredo/iac-patterns/actions/workflows/trunk-check.yaml/badge.svg)](https://github.com/opencredo/iac-patterns/actions/workflows/trunk-check.yaml)
 
-This represents various patterns using terragrunt and terraform
+This represents various patterns using terragrunt and terraform promoted from [aws-iac-patterns](https://github.com/opencredo/aws-iac-patterns)
 
 ## Infrastructure as Code Examples
 
