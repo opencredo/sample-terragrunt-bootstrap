@@ -50,6 +50,15 @@ Use a lightweight manual bootstrap process to create a basic Terragrunt set up t
 
    ```yaml
    # bootstrap/import.tf
+   resource "time_sleep" "wait_20_seconds" {
+   depends_on = [null_resource.previous]
+   create_duration = "20s"
+   }
+
+   resource "null_resource" "next" {
+   depends_on = [time_sleep.wait_20_seconds]
+   }
+
    import {
    to = aws_s3_bucket.mb
    id = "staging-tfs-aws-iac-patterns"
