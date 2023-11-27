@@ -1,0 +1,90 @@
+permissions: read-all
+
+name: TG-Action
+
+on:
+  workflow_call:
+    inputs:
+      target-sec:
+        type: boolean
+        default: true
+      target-env:
+        required: true
+        type: string
+      target:
+        required: true
+        type: string
+      working-directory:
+        required: true
+        type: string
+      role-to-assume:
+        default: 762446573668
+        type: string
+      aws-region:
+        default: eu-west-2
+        type: string
+
+jobs:
+  tg-action:
+    name: ${{ inputs.target }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.target-env }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Target
+        run: |
+          echo "----target" ${{ inputs.target }}
+          echo "----WORK DIR" ${{ inputs.working-directory }}
+          ls -lrt
+
+      - name: Check working directory
+        if: ${{ inputs.working-directory == '' }}
+        run: |
+          echo "Working directory input is empty"
+          exit 1
+
+      - uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::${{ inputs.role-to-assume }}:role/terraform-execution
+          aws-region: ${{ inputs.aws-region }}
+
+      - name: Save credentials
+        run: |
+          echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN" >> $GITHUB_ENV
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Setup Terragrunt
+        run: |
+          wget https://github.com/gruntwork-io/terragrunt/releases/download/v0.36.7/terragrunt_linux_amd64
+          chmod +x terragrunt_linux_amd64
+          sudo mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
+
+      - name: Terragrunt Plan
+        env:
+          TF_UPDATEDBY: ${{ github.actor }}
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          terragrunt run-all plan -out=$GITHUB_WORKSPACE/tfplan
+
+      - name: Terragrunt Apply
+        if: ${{ inputs.target == 'apply' }}
+        env:
+          TF_UPDATEDBY: ${{ github.actor }}
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          terragrunt run-all apply --auto-approve --terragrunt-non-interactive --terragrunt-parallelism 1
+
+      - name: Terragrunt Destroy
+        if: ${{ inputs.target == 'destroy' }}
+        env:
+          TF_UPDATEDBY: ${{ github.actor }}
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          terragrunt run-all destroy --auto-approve --terragrunt-non-interactive --terragrunt-parallelism 1

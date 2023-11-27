@@ -1,0 +1,44 @@
+name: 010-DEV-PIPELINE
+
+on:
+  push:
+    branches:
+      - develop
+      - feat/*
+      - story/*
+      - fix/*
+
+permissions:
+  contents: read
+
+jobs:
+  BUILD:
+    runs-on: ubuntu-latest
+    environment: DEV
+    permissions: write-all
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Read workload
+        id: workload
+        run: |
+          echo "name=$(jq -r '.name' terragrunt/ex1/env/workload.json)" >> $GITHUB_OUTPUT
+          ls -lrt
+
+      - name: Set workload env
+        run: |
+          echo "WORKLOAD_NAME=${{ steps.workload.outputs.name }}" >> $GITHUB_ENV
+
+    outputs:
+      WORKLOAD_NAME: ${{ steps.workload.outputs.name }}
+
+  DEV-GRUNT:
+    permissions: write-all
+    uses: opencredo/aws-iac-patterns/.github/workflows/terragrunt/ex1/000-terragrunt-action.yml@feat/docs
+    with:
+      working-directory: terragrunt/ex1/env/dev/${{ needs.BUILD.outputs.WORKLOAD_NAME }}
+      target: plan
+      target-sec: false
+      target-env: DEV
+    needs: BUILD
