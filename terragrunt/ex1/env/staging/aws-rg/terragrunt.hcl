@@ -14,7 +14,7 @@ locals {
 inputs = merge(
   local.common.inputs,
   {
-      name          = "dev-rg"
+      name          = "staging-rg"
       environment   = local.common.locals.environment
   }
 )
