@@ -11,6 +11,7 @@ module.exports = {
     "subject-empty": [2, "never"],
 
     "subject-full-stop": [2, "never", "."],
+
   },
 
   prompt: {
@@ -21,7 +22,10 @@ module.exports = {
   },
 
   messages: {
-    "subject-empty": "Subject cannot be empty.",
-    "subject-full-stop": "Subject cannot end with period.",
+    "subject-empty": "Subject cannot be empty",
+
+    "subject-full-stop": "Subject cannot end with period",
+
+    dco: "Commits should be signed off",
   },
 };
