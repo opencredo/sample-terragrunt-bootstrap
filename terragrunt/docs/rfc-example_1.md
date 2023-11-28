@@ -79,3 +79,7 @@ The bootstrap process is successful if it creates a viable Terragrunt set up tha
 ## Cost
 
 The bootstrap process only requires a small amount of manual effort up front and a lightweight Terraform state. Ongoing costs come from standard Terragrunt remote state/locking resources.
+
+## Demo
+
+![showandtellbootstrap](https://github.com/opencredo/sample-terragrunt-bootstrap/assets/139238193/7577aca3-0622-4e81-82cb-ac5575222dd1)
