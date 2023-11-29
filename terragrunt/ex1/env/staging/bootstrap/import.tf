@@ -14,5 +14,5 @@ resource "null_resource" "next" {
 
 import {
   to = aws_s3_bucket.mb
-  id = "staging-tfs-aws-iac-patterns"
+  id = "staging-tfs-sample-terragrunt-bootstrap"
 }
