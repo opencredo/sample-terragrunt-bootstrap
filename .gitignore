@@ -1,0 +1,42 @@
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform
+*.tfstate.backup
+*.out
+crash.log
+
+# Local .terraform directories
+**/.terraform/*
+
+# Terratest cache files
+.terraform.lock.hcl
+
+# .tfvars files
+*.tfvars
+
+# Override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CLI configuration files
+.terraformrc
+terraform.rc
+
+# IDE folders
+.idea
+.vscode
+
+# Terragrunt files
+.terragrunt-cache
+terragrunt.hcl
+terragrunt.iml
+terraform-keep.tfvars
+remote-state.tfvars
+terragrunt
+
+# Bundle files
+.bundle
+.ruby-versi
