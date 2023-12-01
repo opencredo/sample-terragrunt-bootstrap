@@ -1,0 +1,12 @@
+# See https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/about-code-owners
+# for more information about the CODEOWNERS file.
+
+# Note: In order for this file to work, any team that has ownership in this file will need to be given
+# explicit "write" access to the repository. (It is not sufficient for the members of the team to already
+# be in the "developers" team, the named team needs to be given rights)
+# https://github.community/t/codeowners-works-with-users-but-not-teams/733/2
+
+# Default owners for everything, will automatically be requested for review of PRs
+
+# ==== Default ownership ====
+*       @opencredo/oc-idp
