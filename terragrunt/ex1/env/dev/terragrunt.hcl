@@ -10,7 +10,7 @@ remote_state {
     if_exists = "overwrite"
   }
   config = {
-    bucket         = "dev-tfs-${basename(get_repo_root())}"
+    bucket         = "dev-td-${basename(get_repo_root())}"
     key            = "env/dev/${path_relative_to_include()}/terraform.tfstate"
     region         = "us-west-2"
     encrypt        = true

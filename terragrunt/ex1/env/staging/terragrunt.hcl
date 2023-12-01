@@ -10,7 +10,7 @@ remote_state {
     if_exists = "overwrite"
   }
   config = {
-    bucket         = "staging-tfs-${basename(get_repo_root())}"
+    bucket         = "staging-td-${basename(get_repo_root())}"
     key            = "env/staging/${path_relative_to_include()}/terraform.tfstate"
     region         = "eu-west-2"
     encrypt        = true
